@@ -150,10 +150,10 @@ func TestRunner(t *testing.T) {
 	runner.Kill()
 	runner.Wg.Wait()
 	//
-	runner.Bash = "xdds"
-	runner.Start()
-	time.Sleep(time.Second)
-	runner.Wg.Wait()
+	// runner.Bash = "xdds"
+	// runner.Start()
+	// time.Sleep(time.Second)
+	// runner.Wg.Wait()
 	//
 	//
 	fcfg = util.NewFcfg3()

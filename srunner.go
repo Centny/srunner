@@ -62,7 +62,6 @@ func ParseProcL(fcfg *util.Fcfg) ([]*Proc, map[string]*Proc, error) {
 }
 
 type Runner struct {
-	Bash   string
 	WDelay int64
 	Token  map[string]int
 
@@ -72,7 +71,6 @@ type Runner struct {
 }
 
 func NewRunner(fcfg *util.Fcfg) (*Runner, error) {
-	var bash = fcfg.Val2("bash_c", "bash")
 	var wdelay = fcfg.Int64ValV("wdelay", 8000)
 	var tokens = map[string]int{}
 	for _, token := range strings.Split(fcfg.Val2("token", ""), ",") {
@@ -82,7 +80,6 @@ func NewRunner(fcfg *util.Fcfg) (*Runner, error) {
 	var runner *Runner = nil
 	if err == nil {
 		runner = &Runner{
-			Bash:   bash,
 			WDelay: wdelay,
 			Token:  tokens,
 			Wg:     sync.WaitGroup{},
@@ -170,7 +167,7 @@ func (r *Runner) RunProc(p *Proc) error {
 	r.Wg.Add(1)
 	defer r.Wg.Done()
 	log.I("Runner start process(%v) by exec(%v),args(%v),out(%v),err(%v),on(%v)", p.Name, p.Exec, p.Args, p.OutF, p.ErrF, p.On)
-	var runner = exec.Command(r.Bash, "-c", p.Exec+" "+p.Args)
+	var runner = exec.Command(p.Exec, util.ParseArgs(p.Args)...)
 	runner.Dir = p.Cws
 	var env = p.Envs
 	if len(env) > 0 {
@@ -205,7 +202,7 @@ func (r *Runner) RunProc(p *Proc) error {
 func (r *Runner) Kill() {
 	var sended = 0
 	for _, proc := range r.ProcL {
-		if proc.Cmd == nil {
+		if proc.Cmd == nil || proc.Cmd.Process == nil {
 			continue
 		}
 		proc.Cmd.Process.Kill()
