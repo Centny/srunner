@@ -168,7 +168,7 @@ func (r *Runner) RunProc(p *Proc) error {
 	r.Wg.Add(1)
 	defer r.Wg.Done()
 	log.I("Runner start process(%v) by cws(%v),exec(%v),args(%v),out(%v),err(%v),on(%v)",
-		p.Cws, p.Name, p.Exec, p.Args, p.OutF, p.ErrF, p.On)
+		p.Name, p.Cws, p.Exec, p.Args, p.OutF, p.ErrF, p.On)
 	var runner = exec.Command(p.Exec, util.ParseArgs(p.Args)...)
 	runner.Dir = p.Cws
 	var env = p.Envs
