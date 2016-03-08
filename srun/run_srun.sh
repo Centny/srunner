@@ -5,4 +5,6 @@ conf=conf/srun.properties
 if [ "$SR_C" != "" ];then
 	conf=$SR_C
 fi
-srun $conf
+for (( i = 1; i>0; i++ )); do
+	srun $conf
+done

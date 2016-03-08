@@ -8,4 +8,5 @@ set INSTALL="%SystemDrive%\Users\%RUN_USR%\AppData\Roaming\Microsoft\Windows\Sta
 echo cd /d %~dp0 >%INSTALL%
 echo rundll32 user32.dll,LockWorkStation >>%INSTALL%
 echo run_srun.bat >>%INSTALL%
+echo pause >>%INSTALL%
 pause
