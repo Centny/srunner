@@ -42,6 +42,7 @@ func main() {
 	fcfg.InitWithFilePath2(conf, true)
 	fcfg.Print()
 	redirect_l(fcfg)
+	smartio.ShowLog = fcfg.Val2("showlog", "1") == "1"
 	var runner, err = srunner.NewRunner(fcfg)
 	if err != nil {
 		fmt.Println(err)

@@ -176,14 +176,21 @@ func (r *Runner) RunProc(p *Proc) error {
 		runner.Env = append(os.Environ(), strings.Split(env, ",")...)
 	}
 	var out_w, err_w *smartio.TimeFlushWriter = nil, nil
+	var out_d, err_d *smartio.DateSwitchWriter = nil, nil
 	if len(p.OutF) > 0 {
-		out_w = smartio.NewNamedWriter(p.Cws, p.OutF, 1024, r.WDelay)
-		defer out_w.Stop()
+		out_d, out_w = smartio.NewNamedWriter(p.Cws, p.OutF, 1024, r.WDelay)
+		defer func() {
+			out_w.Stop()
+			out_d.Close()
+		}()
 		runner.Stdout = out_w
 	}
 	if len(p.ErrF) > 0 {
-		err_w = smartio.NewNamedWriter(p.Cws, p.ErrF, 1024, r.WDelay)
-		defer err_w.Stop()
+		err_d, err_w = smartio.NewNamedWriter(p.Cws, p.ErrF, 1024, r.WDelay)
+		defer func() {
+			err_w.Stop()
+			err_d.Close()
+		}()
 		runner.Stderr = err_w
 	}
 	p.Cmd = runner
