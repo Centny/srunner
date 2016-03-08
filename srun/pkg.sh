@@ -30,7 +30,8 @@ mkdir $o_srv/conf
 mkdir $o_srv/www
 go build -o $o_srv/$n_srv_ github.com/Centny/srunner/srun
 cp "$n_srv".properties $o_srv/conf
-cp run_* $o_srv
+cp *.bat $o_srv
+cp *.sh $o_srv
 
 ###
 if [ "$1" != "" ];then
