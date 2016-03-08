@@ -8,6 +8,8 @@ import (
 	"github.com/Centny/gwf/util"
 	"github.com/Centny/srunner"
 	"os"
+	"sync"
+	"time"
 )
 
 var ef = os.Exit
@@ -45,10 +47,24 @@ func main() {
 		return
 	}
 	runner.Start()
+	var wg = sync.WaitGroup{}
+	wg.Add(1)
 	var listen = fcfg.Val2("listen", "")
 	routing.H("^/exec(\\?.*)?", runner)
-	log.I("listen web on %v", listen)
-	routing.ListenAndServe(listen)
+	routing.HFunc("^/_exit_$", func(hs *routing.HTTPSession) routing.HResult {
+		runner.Kill()
+		runner.Wg.Wait()
+		wg.Done()
+		log.I("srun receive exit require, the srun service will exit")
+		return hs.MsgRes("OK")
+	})
+	go func() {
+		log.I("listen web on %v", listen)
+		routing.ListenAndServe(listen)
+	}()
+	wg.Wait()
+	log.I("srun done...")
+	time.Sleep(time.Second)
 }
 
 func redirect_l(fcfg *util.Fcfg) {
