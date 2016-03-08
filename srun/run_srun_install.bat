@@ -5,7 +5,8 @@ reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogo
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultUserName /t REG_SZ /d %RUN_USR% /f
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultPassword /t REG_SZ /d %RUN_PWD% /f
 set INSTALL="%SystemDrive%\Users\%RUN_USR%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\start_srun.bat"
-echo cd /d %~dp0 >%INSTALL%
+echo @echo off >%INSTALL%
+echo cd /d %~dp0 >>%INSTALL%
 echo rundll32 user32.dll,LockWorkStation >>%INSTALL%
 echo run_srun.bat >>%INSTALL%
 echo pause >>%INSTALL%
