@@ -7,6 +7,7 @@ import (
 	"github.com/Centny/gwf/smartio"
 	"github.com/Centny/gwf/util"
 	"github.com/Centny/srunner"
+	"net/http"
 	"os"
 	"sync"
 	"time"
@@ -59,6 +60,10 @@ func main() {
 		log.I("srun receive exit require, the srun service will exit")
 		return hs.MsgRes("OK")
 	})
+	var www = fcfg.Val2("www", "")
+	if len(www) > 0 {
+		routing.Shared.Handler("^.*$", http.FileServer(http.Dir(www)))
+	}
 	go func() {
 		log.I("listen web on %v", listen)
 		routing.ListenAndServe(listen)
