@@ -53,6 +53,7 @@ func ParseProcL(fcfg *util.Fcfg) ([]*Proc, map[string]*Proc, error) {
 		proc.OutF = fcfg.Val2(srv+"/outf", "")
 		proc.ErrF = fcfg.Val2(srv+"/errf", "")
 		proc.Desc = fcfg.Val2(srv+"/desc", "")
+		proc.Cws = fcfg.Val2(srv+"/cws", ".")
 		proc.On = fcfg.Val2(srv+"/on", "0") == "1"
 		proc.Status = PS_NOT_START
 		proc_l = append(proc_l, proc)
@@ -166,7 +167,8 @@ func (r *Runner) StopProc(name string, timeout int64) error {
 func (r *Runner) RunProc(p *Proc) error {
 	r.Wg.Add(1)
 	defer r.Wg.Done()
-	log.I("Runner start process(%v) by exec(%v),args(%v),out(%v),err(%v),on(%v)", p.Name, p.Exec, p.Args, p.OutF, p.ErrF, p.On)
+	log.I("Runner start process(%v) by cws(%v),exec(%v),args(%v),out(%v),err(%v),on(%v)",
+		p.Cws, p.Name, p.Exec, p.Args, p.OutF, p.ErrF, p.On)
 	var runner = exec.Command(p.Exec, util.ParseArgs(p.Args)...)
 	runner.Dir = p.Cws
 	var env = p.Envs
