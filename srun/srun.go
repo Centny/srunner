@@ -39,6 +39,7 @@ func main() {
 	}
 	var fcfg = util.NewFcfg3()
 	fcfg.InitWithFilePath2(conf, true)
+	fcfg.Print()
 	redirect_l(fcfg)
 	var runner, err = srunner.NewRunner(fcfg)
 	if err != nil {
