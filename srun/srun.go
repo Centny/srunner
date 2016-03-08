@@ -37,13 +37,14 @@ func main() {
 	}
 	var fcfg = util.NewFcfg3()
 	fcfg.InitWithFilePath2(conf, true)
+	redirect_l(fcfg)
 	var runner, err = srunner.NewRunner(fcfg)
 	if err != nil {
 		fmt.Println(err)
 		ef(1)
 		return
 	}
-	redirect_l(fcfg)
+	runner.Start()
 	var listen = fcfg.Val2("listen", "")
 	routing.H("^/exec(\\?.*)?", runner)
 	log.I("listen web on %v", listen)
